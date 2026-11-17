@@ -199,12 +199,10 @@
             border: 1px solid #fecdd3;
         }
 
-        /* Modal Form Pemesanan Atas Nama Pengunjung (AC 4, 5, 7) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6);
-            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -253,7 +251,6 @@
     </div>
 
     <div class="container">
-        <!-- Verifikasi Otorisasi Manajer Travel (AC 1) -->
         <div class="auth-card" id="authCard">
             <div class="auth-info">
                 <span>🛡️ Status Otorisasi: <strong id="statusText">Manajer Travel Sah (Terverifikasi)</strong></span>
@@ -261,14 +258,12 @@
             <button type="button" class="btn-toggle-auth" id="toggleAuthBtn" onclick="toggleAuthStatus()">Simulasikan Bukan Manajer</button>
         </div>
 
-        <!-- Peringatan Akses Ditolak (AC 1) -->
         <div class="restricted-overlay" id="restrictedBox">
             ⛔ Akses Ditolak: "Hanya pengguna dengan hak akses Manajer Travel sah yang dapat melakukan pencarian dan pemesanan atas nama pengunjung."
         </div>
 
-        <!-- Form Pencarian Jadwal oleh Manajer (Task a & AC 2) -->
         <div class="card" id="searchWorkspace">
-            <h2 class="card-title">1. Cari Jadwal Penerbangan</h2>
+            <h2 class="card-title">Cari Jadwal Penerbangan</h2>
             <form id="searchForm">
                 <div class="search-grid">
                     <div class="field-group">
@@ -305,14 +300,12 @@
             </form>
         </div>
 
-        <!-- Hasil Pencarian Jadwal (AC 3) -->
         <div class="card" id="resultsWorkspace" style="display: none;">
             <h2 class="card-title">2. Daftar Jadwal Tersedia</h2>
             <div id="flightResultsContainer"></div>
         </div>
     </div>
 
-    <!-- Modal Form Input Data Pengunjung & Pemesanan (Task b, c & AC 4, 5, 6, 7) -->
     <div class="modal-overlay" id="bookingModal">
         <div class="modal-card">
             <h3 style="margin-bottom: 6px; color: var(--secondary);">Pesan Tiket Atas Nama Pengunjung</h3>
@@ -379,7 +372,6 @@
             }
         }
 
-        // Database Simulasi Penerbangan
         const flightDatabase = [
             { asal: 'CGK', tujuan: 'DPS', airline: 'Garuda Indonesia', code: 'GA-402', time: '08:00 - 10:50', price: 1250000 },
             { asal: 'CGK', tujuan: 'DPS', airline: 'Citilink', code: 'QG-680', time: '13:15 - 16:05', price: 650000 },
@@ -405,14 +397,13 @@
             container.innerHTML = '';
             resultsWorkspace.style.display = "block";
 
-            // AC 3: Jika jadwal tidak tersedia (simulasi tanggal berakhiran 31 atau rute kosong)
             const isNoSchedule = tanggal.endsWith('-31');
             const filtered = isNoSchedule ? [] : flightDatabase.filter(f => f.asal === asal && f.tujuan === tujuan);
 
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        "Jadwal penerbangan tidak tersedia untuk rute dan tanggal tersebut"[cite: 33]
+                        "Jadwal penerbangan tidak tersedia untuk rute dan tanggal tersebut"
                     </div>
                 `;
                 return;
@@ -450,7 +441,6 @@
             document.getElementById('bookingModal').style.display = 'none';
         }
 
-        // AC 4, 5, 6, 7: Proses pemesanan atas nama pengunjung & sinkronisasi e-tiket
         document.getElementById('visitorBookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -463,7 +453,7 @@
                 ✅ <strong>Pemesanan Berhasil Dicatat!</strong><br>
                 Tiket atas nama <strong>${name}</strong> berhasil dipesan.<br>
                 • Ditautkan ke akun pengunjung.<br>
-                • E-tiket resmi telah otomatis dikirimkan ke email: <strong>${email}</strong>.[cite: 33]
+                • E-tiket resmi telah otomatis dikirimkan ke email: <strong>${email}</strong>.
             `;
             successBox.style.display = "block";
             this.style.display = "none";

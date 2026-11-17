@@ -276,12 +276,10 @@
             font-size: 0.9rem;
         }
 
-        /* Modal Pemesanan Sederhana (Task c / AC 5) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6);
-            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100;
@@ -312,7 +310,6 @@
     </div>
 
     <div class="container">
-        <!-- Verifikasi Status Member (AC 1) -->
         <div class="auth-card" id="authCard">
             <div class="auth-info">
                 <span>⭐ Status Akun: <strong id="statusText">Verified Frequent Traveller (Aktif)</strong></span>
@@ -320,12 +317,10 @@
             <button type="button" class="btn-toggle-vip" id="toggleVipBtn" onclick="toggleVipStatus()">Ubah Status Member</button>
         </div>
 
-        <!-- Peringatan Akses Ditolak -->
         <div class="restricted-overlay" id="restrictedBox">
-            ⛔ Akses Ditolak: Hanya pengguna yang terverifikasi sebagai <strong>Member Frequent Traveller</strong> yang dapat mengakses fitur perbandingan dan pemilihan penerbangan ini[cite: 24].
+            ⛔ Akses Ditolak: Hanya pengguna yang terverifikasi sebagai <strong>Member Frequent Traveller</strong> yang dapat mengakses fitur perbandingan dan pemilihan penerbangan ini.
         </div>
 
-        <!-- Form Filter Preferensi (Task a & AC 2) -->
         <div class="search-card" id="searchCardContainer">
             <form id="filterForm">
                 <div class="filter-grid">
@@ -359,15 +354,13 @@
             </form>
         </div>
 
-        <!-- Area Hasil Perbandingan (Task b & AC 3, 4, 5) -->
         <div id="resultsArea">
             <div class="initial-state">
-                Silakan pilih preferensi tujuan, tanggal, dan jam keberangkatan di atas untuk membandingkan harga tiket[cite: 24].
+                Silakan pilih preferensi tujuan, tanggal, dan jam keberangkatan di atas untuk membandingkan harga tiket.
             </div>
         </div>
     </div>
 
-    <!-- Modal Simulasi Halaman Pemesanan (AC 5) -->
     <div class="modal-overlay" id="bookingModal">
         <div class="modal-card">
             <h3>Pusat Navigasi Pemesanan Tiket</h3>
@@ -414,7 +407,6 @@
             }
         }
 
-        // Database Simulasi Jadwal Penerbangan Berdasarkan Preferensi
         const databasePenerbangan = [
             { dest: 'DPS', airline: 'Garuda Indonesia', code: 'GA-402', timeSlot: 'MORNING', dep: '08:00', arr: '10:50', price: 1250000 },
             { dest: 'DPS', airline: 'Citilink', code: 'QG-680', timeSlot: 'AFTERNOON', dep: '13:15', arr: '16:05', price: 650000 },
@@ -440,7 +432,6 @@
             const resultsArea = document.getElementById('resultsArea');
             resultsArea.innerHTML = '';
 
-            // Simulasi kondisi tidak ditemukan jika memilih tanggal tertentu atau kriteria kosong
             const isNoSchedule = dateVal.endsWith('-31');
 
             let filtered = isNoSchedule ? [] : databasePenerbangan.filter(item => item.dest === dest);
@@ -449,17 +440,15 @@
                 filtered = filtered.filter(item => item.timeSlot === timeSlot);
             }
 
-            // AC 4: Pesan jika tidak ditemukan jadwal
             if (filtered.length === 0) {
                 resultsArea.innerHTML = `
                     <div class="empty-state">
-                        "Penerbangan tidak ditemukan untuk preferensi yang dipilih"[cite: 24]
+                        Penerbangan tidak ditemukan untuk preferensi yang dipilih
                     </div>
                 `;
                 return;
             }
 
-            // Header & List Perbandingan Harga (AC 2 & 3)
             const wrapper = document.createElement('div');
             wrapper.innerHTML = `
                 <div class="comparison-header">
@@ -491,7 +480,6 @@
             resultsArea.appendChild(wrapper);
         });
 
-        // AC 5: Navigasi ke halaman pemesanan tiket
         function proceedToBooking(airline, code, dep, price) {
             const details = document.getElementById('modalFlightDetails');
             details.innerHTML = `Anda memilih maskapai <strong>${airline} (${code})</strong> keberangkatan pukul <strong>${dep} WIB</strong> dengan harga <strong>${price}</strong>.<br><br>Sistem sedang mengarahkan Anda ke halaman pemesanan tiket...`;

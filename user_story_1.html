@@ -675,13 +675,12 @@
     const uiModalDetail = {
       buka(idPegawai) {
         const tglMulai = document.getElementById("tglMulai").value;
-        const tahunDipilih = parseInt(tglMulai.split("-")[0], 10);
+        const tahunDipilih = Number.parseInt(tglMulai.split("-")[0], 10);
 
         const detail = CutiController.getDetailPegawai(idPegawai, tahunDipilih);
 
         document.getElementById("modalNamaPegawai").textContent = detail.pegawai.namaLengkap;
-        document.getElementById("modalInfoPegawai").textContent =
-          `NIP: ${detail.pegawai.nip} • ${detail.pegawai.jabatan} (${detail.pegawai.departemen})`;
+        document.getElementById("modalInfoPegawai").textContent = `NIP: ${detail.pegawai.nip} | ${detail.pegawai.jabatan} (${detail.pegawai.departemen})`;
 
         document.getElementById("modalTahun").textContent = detail.dataKuota.tahun;
         document.getElementById("modalTotalJatah").textContent = `${detail.dataKuota.totalJatah} Hari`;
@@ -697,7 +696,7 @@
               (r) => `
               <tr>
                 <td>${r.tanggalMulai} s/d ${r.tanggalSelesai}</td>
-                <td>${r.lamaegiCuti || r.lamaCuti} hari</td>
+                <td>${r.lamaCuti} hari</td>
                 <td>${r.alasan}</td>
                 <td><span class="badge status-${r.status}">${r.status}</span></td>
               </tr>

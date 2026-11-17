@@ -62,7 +62,6 @@
             padding: 0 20px;
         }
 
-        /* Kartu Otorisasi (AC 1) */
         .auth-card {
             background: var(--auth-bg);
             border: 1.5px solid var(--auth-border);
@@ -150,7 +149,6 @@
             background: #ffffff;
         }
 
-        /* Tabel Daftar Booking (AC 2, 3) */
         .table-responsive {
             overflow-x: auto;
         }
@@ -239,7 +237,7 @@
             border-radius: 12px;
             text-align: center;
             font-weight: 600;
-            font-size: 0.95net;
+            font-size: 0.95rem;
             border: 1px solid #fecdd3;
             margin-top: 10px;
         }
@@ -253,7 +251,6 @@
     </div>
 
     <div class="container">
-        <!-- Verifikasi Otorisasi Akun Manajer Travel (AC 1) -->
         <div class="auth-card" id="authCard">
             <div class="auth-info">
                 <span>🛡️ Status Otorisasi: <strong id="statusText">Manajer Travel Terverifikasi (Sah)</strong></span>
@@ -261,12 +258,10 @@
             <button type="button" class="btn-toggle-auth" id="toggleAuthBtn" onclick="toggleAuthStatus()">Simulasikan Bukan Manajer</button>
         </div>
 
-        <!-- Peringatan Akses Ditolak (AC 1) -->
         <div class="restricted-overlay" id="restrictedBox">
-            ⛔ Akses Ditolak: "Akun tidak sah atau bukan Manajer Travel. Anda tidak memiliki otorisasi untuk mengakses dasbor ini."[cite: 27, 30]
+            ⛔ Akses Ditolak: "Akun tidak sah atau bukan Manajer Travel. Anda tidak memiliki otorisasi untuk mengakses dasbor ini."
         </div>
 
-        <!-- Dashboard Utama Manajer Travel -->
         <div class="dashboard-card" id="dashboardWorkspace">
             <div class="dashboard-header">
                 <div>
@@ -274,7 +269,6 @@
                     <p style="font-size: 0.85rem; color: var(--muted);">Pantau dan validasi kelanjutan status transaksi pemesanan tiket.</p>
                 </div>
                 
-                <!-- Filter Status Booking Berdasarkan Preferensi (AC 3) -->
                 <div class="filter-group">
                     <label class="field-label" for="statusFilter">Filter Status:</label>
                     <select id="statusFilter" onchange="renderBookingTable()">
@@ -300,7 +294,6 @@
                         </tr>
                     </thead>
                     <tbody id="bookingTableBody">
-                        <!-- Data dirender dinamis via JS -->
                     </tbody>
                 </table>
             </div>
@@ -312,7 +305,6 @@
     <script>
         let isManagerAuthorized = true;
 
-        // Mock database pemesanan tiket pelanggan (AC 2)
         const bookingDatabase = [
             { id: 1, code: 'SKY-9912X', customer: 'Budi Santoso', route: 'CGK ➔ DPS', date: '2026-03-10', total: 'Rp 1.350.000', status: 'confirmed' },
             { id: 2, code: 'SKY-8841Y', customer: 'Siti Aminah', route: 'SUB ➔ KNO', date: '2026-03-11', total: 'Rp 1.450.000', status: 'booked' },
@@ -362,17 +354,15 @@
                 filteredData = bookingDatabase.filter(item => item.status === filterValue);
             }
 
-            // AC 4: Jika tidak ditemukan data booking sesuai filter
             if (filteredData.length === 0) {
                 emptyContainer.innerHTML = `
                     <div class="empty-state">
-                        "Tidak ada data booking dengan status tersebut"[cite: 28, 30]
+                        "Tidak ada data booking dengan status tersebut"
                     </div>
                 `;
                 return;
             }
 
-            // AC 2 & 3: Menampilkan daftar booking / hasil filter
             filteredData.forEach(item => {
                 let badgeClass = 'badge-confirmed';
                 if (item.status === 'booked') badgeClass = 'badge-booked';
@@ -392,7 +382,6 @@
             });
         }
 
-        // AC 5: Memeriksa dan memastikan kelanjutan pemesanan
         function validateBooking(code) {
             alert(`✓ Pemastian Pemesanan Berhasil!\n\nStatus booking dengan kode reference [${code}] telah diverifikasi sah dan kelanjutan pembayarannya dipastikan valid oleh Manajer Travel.`);
         }

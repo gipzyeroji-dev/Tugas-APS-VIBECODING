@@ -271,11 +271,10 @@
     </header>
 
     <div class="nav-tabs">
-      <button class="tab-btn active" id="tabPencarian" onclick="uiNav.pindahTab('pencarian')">1. Cari &amp; Pesan Penerbangan</button>
-      <button class="tab-btn" id="tabRiwayat" onclick="uiNav.pindahTab('riwayat')">2. Riwayat &amp; Pembatalan Pesanan</button>
+      <button class="tab-btn active" id="tabPencarian" onclick="uiNav.pindahTab('pencarian')">Cari &amp; Pesan Penerbangan</button>
+      <button class="tab-btn" id="tabRiwayat" onclick="uiNav.pindahTab('riwayat')">Riwayat &amp; Pembatalan Pesanan</button>
     </div>
 
-    <!-- TAB 1: PENCARIAN & PEMESANAN -->
     <section id="panelPencarian" class="card">
       <div class="card-title">Pencarian Jadwal Penerbangan</div>
       <div class="form-grid">
@@ -307,14 +306,12 @@
       <div id="hasilPencarianContainer"></div>
     </section>
 
-    <!-- TAB 2: RIWAYAT & PEMBATALAN -->
     <section id="panelRiwayat" class="card hidden">
       <div class="card-title">Daftar Pesanan Tiket Aktif &amp; Riwayat</div>
       <div id="riwayatContainer"></div>
     </section>
   </div>
 
-  <!-- MODAL PEMESANAN TIKET -->
   <div id="modalPemesanan" class="modal-backdrop hidden">
     <div class="modal-box">
       <div class="card-title">Form Pemesanan Tiket Pesawat</div>
@@ -337,9 +334,6 @@
   </div>
 
   <script>
-    // =========================================================================
-    // 1. ENTITY (MODEL DATA & DATABASE SISTEM) — Sesuai Domain Model Slide 6
-    // =========================================================================
     const StatusPemesanan = Object.freeze({
       BERHASIL: "BERHASIL",
       DIBATALKAN: "DIBATALKAN"
@@ -410,9 +404,6 @@
       }
     };
 
-    // =========================================================================
-    // 2. CONTROL (LOGIKA BISNIS) — Sesuai Robustness & Sequence Diagram Slide 7-8
-    // =========================================================================
     const PenerbanganController = {
       cariJadwal(asal, tujuan, tanggal) {
         if (!asal || !tujuan || !tanggal) {
@@ -420,7 +411,6 @@
         }
         const list = DatabaseSistem.queryPenerbangan(asal, tujuan, tanggal);
         if (list.length === 0) {
-          // Acceptance Criteria #6
           return { valid: true, kosong: true, pesan: "Jadwal penerbangan tidak ditemukan" };
         }
         return { valid: true, kosong: false, data: list };
@@ -463,9 +453,6 @@
       }
     };
 
-    // =========================================================================
-    // 3. BOUNDARY (ANTAR MUKA / UI) — Sesuai Robustness Diagram Slide 7
-    // =========================================================================
     const uiNav = {
       pindahTab(tab) {
         document.getElementById("tabPencarian").classList.remove("active");
@@ -545,8 +532,7 @@
         const flight = DatabaseSistem.penerbangan.find(p => p.idPenerbangan === idPenerbangan);
         const m = DatabaseSistem.maskapai.find(mask => mask.idMaskapai === flight.idMaskapai);
 
-        document.getElementById("infoPenerbanganModal").textContent = 
-          `Penerbangan: ${m.namaMaskapai} (${flight.nomorPenerbangan}) • ${flight.bandaraAsal} → ${flight.bandaraTujuan} • Rp ${flight.hargaTiket.toLocaleString('id-ID')}`;
+        document.getElementById("infoPenerbanganModal").textContent = `Penerbangan: ${m.namaMaskapai} (${flight.nomorPenerbangan}) • ${flight.bandaraAsal} → ${flight.bandaraTujuan} • Rp ${flight.hargaTiket.toLocaleString('id-ID')}`;
         
         document.getElementById("modalPemesanan").classList.remove("hidden");
       },
@@ -557,7 +543,7 @@
 
       konfirmasi() {
         const nama = document.getElementById("namaPenumpang").value;
-        const jumlah = parseInt(document.getElementById("jumlahTiket").value, 10);
+        const jumlah = Number.parseInt(document.getElementById("jumlahTiket").value, 10);
 
         if (!nama) {
           alert("Nama penumpang wajib diisi.");

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCompare - Profil & Validasi Tiket VIP</title>
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --danger: #e11d48;
+            --danger-bg: #fff1f2;
+            --vip-bg: #f0fdfa;
+            --vip-border: #5eead4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #134e4a 0%, #0f172a 100%);
+            color: white;
+            padding: 40px 24px 70px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .hero p {
+            color: #99f6e4;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: -45px auto 0;
+            padding: 0 20px;
+        }
+
+        .auth-card {
+            background: var(--vip-bg);
+            border: 1.5px solid var(--vip-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.08);
+        }
+
+        .auth-info {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #115e59;
+        }
+
+        .btn-toggle-vip {
+            background: #ffffff;
+            border: 1px solid var(--vip-border);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-vip:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--secondary);
+        }
+
+        .card-sub {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .field-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+        }
+
+        input[type="text"], input[type="tel"], input[type="email"] {
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.92rem;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 11px 18px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: #f1f5f9;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+        .ticket-preview {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+
+        .ticket-route {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 6px;
+        }
+
+        .ticket-meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 8px;
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .feedback-box {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid #a7f3d0;
+        }
+
+        .feedback-error {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid #fecdd3;
+        }
+
+        .restricted-overlay {
+            background: var(--danger-bg);
+            border: 1.5px solid #fca5a5;
+            color: var(--danger);
+            padding: 28px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>SkyCompare Member Center</h1>
+        <p>Pembaruan Profil Personal & Validasi Tiket Frequent Traveller</p>
+    </div>
+
+    <div class="container">
+        <!-- Verifikasi Status Member Frequent Traveller (AC 1) -->
+        <div class="auth-card" id="authCard">
+            <div class="auth-info">
+                <span>⭐ Status Akun: <strong id="statusText">Verified Frequent Traveller (Aktif)</strong></span>
+            </div>
+            <button type="button" class="btn-toggle-vip" id="toggleVipBtn" onclick="toggleVipStatus()">Ubah Status Member</button>
+        </div>
+
+        <!-- Peringatan Jika Bukan Frequent Traveller -->
+        <div class="restricted-overlay" id="restrictedBox">
+            ⛔ Akses Ditolak: Pengguna harus terverifikasi sebagai <strong>Member Frequent Traveller</strong> yang aktif untuk mengakses fitur profil dan validasi tiket.
+        </div>
+
+        <!-- Konten Utama (Profil & Validasi Tiket) -->
+        <div class="main-grid" id="mainWorkspace">
+            <!-- Form Pembaruan Profil (AC 2) -->
+            <div class="card">
+                <h2 class="card-title">Data Profil Personal</h2>
+                <p class="card-sub">Lengkapi seluruh data di bawah ini agar validasi tiket dapat diproses.</p>
+
+                <form id="profileForm">
+                    <div class="field-group">
+                        <label class="field-label" for="fullName">Nama Lengkap (Sesuai KTP/Paspor)</label>
+                        <input type="text" id="fullName" placeholder="Masukkan nama lengkap" value="Muhammad Alghifari Putra">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="identityNumber">Nomor Identitas (NIK / Paspor)</label>
+                        <input type="text" id="identityNumber" placeholder="Contoh: 357301xxxxxxxxxx" value="">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="phoneNumber">Nomor Kontak / HP</label>
+                        <input type="tel" id="phoneNumber" placeholder="Contoh: 0812xxxxxxxx" value="081234567890">
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="emailAddress">Alamat Email Aktif</label>
+                        <input type="email" id="emailAddress" placeholder="nama@email.com" value="algip.dev@student.ub.ac.id">
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="submit" class="btn-primary">Simpan Perubahan Profil</button>
+                        <button type="button" class="btn-outline" onclick="clearProfile()">Kosongkan Data</button>
+                    </div>
+                </form>
+
+                <div class="feedback-box feedback-success" id="saveFeedback"></div>
+            </div>
+
+            <!-- Panel Validasi Tiket Penerbangan (AC 3 & AC 4) -->
+            <div class="card">
+                <h2 class="card-title">Validasi Tiket Penerbangan</h2>
+                <p class="card-sub">Sistem akan memverifikasi kelengkapan profil Anda sebelum menerbitkan e-Ticket.</p>
+
+                <div class="ticket-preview">
+                    <div class="ticket-route">CGK (Jakarta) ➔ DPS (Bali)</div>
+                    <div class="ticket-meta">
+                        Maskapai: <strong>Garuda Indonesia (GA-402)</strong><br>
+                        Kode Booking: <strong>SKY-88291X</strong><br>
+                        Penumpang: <strong id="ticketPassengerName">Muhammad Alghifari Putra</strong>
+                    </div>
+                    <span class="status-badge" id="ticketStatusBadge">Menunggu Validasi</span>
+                </div>
+
+                <button type="button" class="btn-primary" style="width: 100%;" onclick="validateTicket()">Validasi Tiket Sekarang</button>
+
+                <div class="feedback-box" id="validationFeedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isFrequentTraveller = true;
+
+        // State data profil yang tersimpan di sistem
+        let savedProfile = {
+            fullName: "Muhammad Alghifari Putra",
+            identityNumber: "", // sengaja dikosongkan di awal agar mudah menguji skenario AC 4
+            phoneNumber: "081234567890",
+            emailAddress: "algip.dev@student.ub.ac.id"
+        };
+
+        function toggleVipStatus() {
+            isFrequentTraveller = !isFrequentTraveller;
+            const statusText = document.getElementById('statusText');
+            const toggleBtn = document.getElementById('toggleVipBtn');
+            const authCard = document.getElementById('authCard');
+            const restrictedBox = document.getElementById('restrictedBox');
+            const mainWorkspace = document.getElementById('mainWorkspace');
+
+            if (isFrequentTraveller) {
+                statusText.textContent = "Verified Frequent Traveller (Aktif)";
+                toggleBtn.textContent = "Ubah Status Member";
+                authCard.style.background = "var(--vip-bg)";
+                authCard.style.borderColor = "var(--vip-border)";
+                restrictedBox.style.display = "none";
+                mainWorkspace.style.display = "grid";
+            } else {
+                statusText.textContent = "Regular User (Non-Frequent Traveller)";
+                toggleBtn.textContent = "Aktifkan Status VIP";
+                authCard.style.background = "#fef2f2";
+                authCard.style.borderColor = "#fca5a5";
+                restrictedBox.style.display = "block";
+                mainWorkspace.style.display = "none";
+            }
+        }
+
+        // Task a & AC 2: Simpan pembaruan profil
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            savedProfile = {
+                fullName: document.getElementById('fullName').value.trim(),
+                identityNumber: document.getElementById('identityNumber').value.trim(),
+                phoneNumber: document.getElementById('phoneNumber').value.trim(),
+                emailAddress: document.getElementById('emailAddress').value.trim()
+            };
+
+            document.getElementById('ticketPassengerName').textContent = savedProfile.fullName || "(Belum diisi)";
+
+            const saveFeedback = document.getElementById('saveFeedback');
+            saveFeedback.textContent = "✓ Perubahan data profil berhasil disimpan ke sistem.";
+            saveFeedback.style.display = "block";
+
+            setTimeout(() => {
+                saveFeedback.style.display = "none";
+            }, 3500);
+        });
+
+        function clearProfile() {
+            document.getElementById('fullName').value = "";
+            document.getElementById('identityNumber').value = "";
+            document.getElementById('phoneNumber').value = "";
+            document.getElementById('emailAddress').value = "";
+            savedProfile = { fullName: "", identityNumber: "", phoneNumber: "", emailAddress: "" };
+            document.getElementById('ticketPassengerName').textContent = "(Belum diisi)";
+            document.getElementById('validationFeedback').style.display = "none";
+            
+            const badge = document.getElementById('ticketStatusBadge');
+            badge.textContent = "Menunggu Validasi";
+            badge.style.background = "#fef3c7";
+            badge.style.color = "#b45309";
+        }
+
+        // Task b & c, AC 3 & 4: Proses validasi tiket berdasarkan kelengkapan profil
+        function validateTicket() {
+            const feedbackBox = document.getElementById('validationFeedback');
+            const badge = document.getElementById('ticketStatusBadge');
+
+            const isComplete = savedProfile.fullName !== "" &&
+                               savedProfile.identityNumber !== "" &&
+                               savedProfile.phoneNumber !== "" &&
+                               savedProfile.emailAddress !== "";
+
+            if (!isComplete) {
+                // AC 4: Pesan kesalahan persis sesuai spesifikasi
+                feedbackBox.className = "feedback-box feedback-error";
+                feedbackBox.textContent = "Data profil tidak lengkap";
+                feedbackBox.style.display = "block";
+
+                badge.textContent = "Validasi Ditolak";
+                badge.style.background = "#ffe4e6";
+                badge.style.color = "#e11d48";
+                return;
+            }
+
+            // AC 3: Validasi sukses menggunakan data profil yang tersedia
+            feedbackBox.className = "feedback-box feedback-success";
+            feedbackBox.innerHTML = `
+                ✅ <strong>Validasi Tiket Berhasil!</strong><br>
+                Tiket telah diterbitkan atas nama <strong>${savedProfile.fullName}</strong> (ID: ${savedProfile.identityNumber}).
+            `;
+            feedbackBox.style.display = "block";
+
+            badge.textContent = "Tervalidasi (Siap Terbang)";
+            badge.style.background = "#d1fae5";
+            badge.style.color = "#059669";
+        }
+    </script>
+</body>
+</html>

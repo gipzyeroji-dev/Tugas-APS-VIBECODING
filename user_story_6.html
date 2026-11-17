@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCompare - Perbandingan & Pemesanan Penerbangan VIP</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --danger: #e11d48;
+            --danger-bg: #fff1f2;
+            --vip-bg: #f0fdf4;
+            --vip-border: #bbf7d0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0369a1 0%, #0f172a 100%);
+            color: white;
+            padding: 40px 24px 70px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .hero p {
+            color: #bae6fd;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: -45px auto 0;
+            padding: 0 20px;
+        }
+
+        .auth-card {
+            background: var(--vip-bg);
+            border: 1.5px solid var(--vip-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.08);
+        }
+
+        .auth-info {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #065f46;
+        }
+
+        .btn-toggle-vip {
+            background: #ffffff;
+            border: 1px solid var(--vip-border);
+            color: var(--success);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-vip:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        .search-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+        }
+
+        select, input[type="date"] {
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.92rem;
+            background: #f8fafc;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        select:focus, input[type="date"]:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 47px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .comparison-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .flight-item {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr auto;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .flight-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 640px) {
+            .flight-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .airline-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .flight-code {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .time-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .price-tag {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        .btn-select {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-select:hover {
+            background: #047857;
+        }
+
+        .restricted-overlay {
+            background: var(--danger-bg);
+            border: 1.5px solid #fca5a5;
+            color: var(--danger);
+            padding: 24px;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .empty-state {
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid #fecdd3;
+        }
+
+        .initial-state {
+            text-align: center;
+            padding: 40px;
+            background: var(--card);
+            border-radius: 14px;
+            border: 1px dashed var(--border);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Modal Pemesanan Sederhana (Task c / AC 5) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>SkyCompare Perbandingan VIP</h1>
+        <p>Saring, Bandingkan, dan Pilih Penerbangan Berdasarkan Preferensi Anda</p>
+    </div>
+
+    <div class="container">
+        <!-- Verifikasi Status Member (AC 1) -->
+        <div class="auth-card" id="authCard">
+            <div class="auth-info">
+                <span>⭐ Status Akun: <strong id="statusText">Verified Frequent Traveller (Aktif)</strong></span>
+            </div>
+            <button type="button" class="btn-toggle-vip" id="toggleVipBtn" onclick="toggleVipStatus()">Ubah Status Member</button>
+        </div>
+
+        <!-- Peringatan Akses Ditolak -->
+        <div class="restricted-overlay" id="restrictedBox">
+            ⛔ Akses Ditolak: Hanya pengguna yang terverifikasi sebagai <strong>Member Frequent Traveller</strong> yang dapat mengakses fitur perbandingan dan pemilihan penerbangan ini[cite: 24].
+        </div>
+
+        <!-- Form Filter Preferensi (Task a & AC 2) -->
+        <div class="search-card" id="searchCardContainer">
+            <form id="filterForm">
+                <div class="filter-grid">
+                    <div class="field-group">
+                        <label class="field-label" for="prefDestination">Kota Tujuan</label>
+                        <select id="prefDestination" required>
+                            <option value="DPS">Bali (DPS)</option>
+                            <option value="SUB">Surabaya (SUB)</option>
+                            <option value="YIA">Yogyakarta (YIA)</option>
+                            <option value="KNO">Medan (KNO)</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="prefDate">Tanggal Keberangkatan</label>
+                        <input type="date" id="prefDate" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="prefTime">Jam Keberangkatan</label>
+                        <select id="prefTime" required>
+                            <option value="ALL">Semua Jam</option>
+                            <option value="MORNING">Pagi (06:00 - 11:59)</option>
+                            <option value="AFTERNOON">Siang/Sore (12:00 - 18:00)</option>
+                            <option value="EVENING">Malam (> 18:00)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Cari & Bandingkan</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Area Hasil Perbandingan (Task b & AC 3, 4, 5) -->
+        <div id="resultsArea">
+            <div class="initial-state">
+                Silakan pilih preferensi tujuan, tanggal, dan jam keberangkatan di atas untuk membandingkan harga tiket[cite: 24].
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Simulasi Halaman Pemesanan (AC 5) -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-card">
+            <h3>Pusat Navigasi Pemesanan Tiket</h3>
+            <p id="modalFlightDetails" style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; line-height: 1.5;"></p>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-submit" style="flex: 1;" onclick="closeModal()">Lanjutkan ke Pembayaran</button>
+                <button type="button" class="btn-toggle-vip" style="padding: 12px 18px;" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isFrequentTraveller = true;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('prefDate').valueAsDate = new Date();
+        });
+
+        function toggleVipStatus() {
+            isFrequentTraveller = !isFrequentTraveller;
+            const statusText = document.getElementById('statusText');
+            const toggleBtn = document.getElementById('toggleVipBtn');
+            const authCard = document.getElementById('authCard');
+            const restrictedBox = document.getElementById('restrictedBox');
+            const searchContainer = document.getElementById('searchCardContainer');
+            const resultsArea = document.getElementById('resultsArea');
+
+            if (isFrequentTraveller) {
+                statusText.textContent = "Verified Frequent Traveller (Aktif)";
+                toggleBtn.textContent = "Ubah Status Member";
+                authCard.style.background = "var(--vip-bg)";
+                authCard.style.borderColor = "var(--vip-border)";
+                restrictedBox.style.display = "none";
+                searchContainer.style.display = "block";
+                resultsArea.style.display = "block";
+            } else {
+                statusText.textContent = "Regular User (Non-Frequent Traveller)";
+                toggleBtn.textContent = "Aktifkan Status VIP";
+                authCard.style.background = "#fef2f2";
+                authCard.style.borderColor = "#fca5a5";
+                restrictedBox.style.display = "block";
+                searchContainer.style.display = "none";
+                resultsArea.style.display = "none";
+            }
+        }
+
+        // Database Simulasi Jadwal Penerbangan Berdasarkan Preferensi
+        const databasePenerbangan = [
+            { dest: 'DPS', airline: 'Garuda Indonesia', code: 'GA-402', timeSlot: 'MORNING', dep: '08:00', arr: '10:50', price: 1250000 },
+            { dest: 'DPS', airline: 'Citilink', code: 'QG-680', timeSlot: 'AFTERNOON', dep: '13:15', arr: '16:05', price: 650000 },
+            { dest: 'DPS', airline: 'AirAsia', code: 'QZ-751', timeSlot: 'EVENING', dep: '19:30', arr: '22:20', price: 580000 },
+            { dest: 'SUB', airline: 'Batik Air', code: 'ID-6570', timeSlot: 'MORNING', dep: '07:30', arr: '09:00', price: 850000 },
+            { dest: 'SUB', airline: 'Lion Air', code: 'JT-312', timeSlot: 'AFTERNOON', dep: '14:00', arr: '15:30', price: 520000 },
+            { dest: 'YIA', airline: 'Garuda Indonesia', code: 'GA-204', timeSlot: 'MORNING', dep: '09:00', arr: '10:15', price: 950000 },
+            { dest: 'KNO', airline: 'Citilink', code: 'QG-910', timeSlot: 'MORNING', dep: '08:30', arr: '12:45', price: 1350000 }
+        ];
+
+        function formatRupiah(num) {
+            return 'Rp ' + num.toLocaleString('id-ID');
+        }
+
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!isFrequentTraveller) return;
+
+            const dest = document.getElementById('prefDestination').value;
+            const timeSlot = document.getElementById('prefTime').value;
+            const dateVal = document.getElementById('prefDate').value;
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.innerHTML = '';
+
+            // Simulasi kondisi tidak ditemukan jika memilih tanggal tertentu atau kriteria kosong
+            const isNoSchedule = dateVal.endsWith('-31');
+
+            let filtered = isNoSchedule ? [] : databasePenerbangan.filter(item => item.dest === dest);
+
+            if (timeSlot !== 'ALL' && !isNoSchedule) {
+                filtered = filtered.filter(item => item.timeSlot === timeSlot);
+            }
+
+            // AC 4: Pesan jika tidak ditemukan jadwal
+            if (filtered.length === 0) {
+                resultsArea.innerHTML = `
+                    <div class="empty-state">
+                        "Penerbangan tidak ditemukan untuk preferensi yang dipilih"[cite: 24]
+                    </div>
+                `;
+                return;
+            }
+
+            // Header & List Perbandingan Harga (AC 2 & 3)
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div class="comparison-header">
+                    <div class="comparison-title">Hasil Perbandingan Harga (${filtered.length} Opsi Ditemukan)</div>
+                    <span style="font-size: 0.85rem; color: var(--muted);">Tujuan: ${dest} • Tanggal: ${dateVal}</span>
+                </div>
+            `;
+
+            filtered.forEach(flight => {
+                const item = document.createElement('div');
+                item.className = 'flight-item';
+                item.innerHTML = `
+                    <div>
+                        <div class="airline-name">${flight.airline}</div>
+                        <div class="flight-code">Nomor: ${flight.code}</div>
+                    </div>
+                    <div class="time-info">
+                        <span>⏰ ${flight.dep} ➔ ${flight.arr} WIB</span>
+                    </div>
+                    <div>
+                        <div class="price-tag">${formatRupiah(flight.price)}</div>
+                        <div style="font-size: 0.75rem; color: var(--muted);">Kelas Ekonomi</div>
+                    </div>
+                    <button type="button" class="btn-select" onclick="proceedToBooking('${flight.airline}', '${flight.code}', '${flight.dep}', '${formatRupiah(flight.price)}')">Pilih Tiket</button>
+                `;
+                wrapper.appendChild(item);
+            });
+
+            resultsArea.appendChild(wrapper);
+        });
+
+        // AC 5: Navigasi ke halaman pemesanan tiket
+        function proceedToBooking(airline, code, dep, price) {
+            const details = document.getElementById('modalFlightDetails');
+            details.innerHTML = `Anda memilih maskapai <strong>${airline} (${code})</strong> keberangkatan pukul <strong>${dep} WIB</strong> dengan harga <strong>${price}</strong>.<br><br>Sistem sedang mengarahkan Anda ke halaman pemesanan tiket...`;
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

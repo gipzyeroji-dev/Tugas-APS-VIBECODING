@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCompare - Manajer Travel & Otorisasi Booking</title>
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-dark: #6d28d9;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --danger: #e11d48;
+            --danger-bg: #fff1f2;
+            --auth-bg: #f5f3ff;
+            --auth-border: #ddd6fe;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4c1d95 0%, #0f172a 100%);
+            color: white;
+            padding: 40px 24px 70px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .hero p {
+            color: #ddd6fe;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: -45px auto 0;
+            padding: 0 20px;
+        }
+
+        /* Kartu Otorisasi (AC 1) */
+        .auth-card {
+            background: var(--auth-bg);
+            border: 1.5px solid var(--auth-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+        }
+
+        .auth-info {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #5b21b6;
+        }
+
+        .btn-toggle-auth {
+            background: #ffffff;
+            border: 1px solid var(--auth-border);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-auth:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .dashboard-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .dashboard-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .field-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        select {
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        /* Tabel Daftar Booking (AC 2, 3) */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: var(--muted);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-confirmed {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-booked {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .badge-waiting {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .btn-validate {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-validate:hover {
+            background: var(--primary-dark);
+        }
+
+        .restricted-overlay {
+            background: var(--danger-bg);
+            border: 1.5px solid #fca5a5;
+            color: var(--danger);
+            padding: 28px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .empty-state {
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95net;
+            border: 1px solid #fecdd3;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>Dashboard Manajemen Travel</h1>
+        <p>Verifikasi Otorisasi, Pemantauan, dan Filter Status Pemesanan Tiket Pelanggan</p>
+    </div>
+
+    <div class="container">
+        <!-- Verifikasi Otorisasi Akun Manajer Travel (AC 1) -->
+        <div class="auth-card" id="authCard">
+            <div class="auth-info">
+                <span>🛡️ Status Otorisasi: <strong id="statusText">Manajer Travel Terverifikasi (Sah)</strong></span>
+            </div>
+            <button type="button" class="btn-toggle-auth" id="toggleAuthBtn" onclick="toggleAuthStatus()">Simulasikan Bukan Manajer</button>
+        </div>
+
+        <!-- Peringatan Akses Ditolak (AC 1) -->
+        <div class="restricted-overlay" id="restrictedBox">
+            ⛔ Akses Ditolak: "Akun tidak sah atau bukan Manajer Travel. Anda tidak memiliki otorisasi untuk mengakses dasbor ini."[cite: 27, 30]
+        </div>
+
+        <!-- Dashboard Utama Manajer Travel -->
+        <div class="dashboard-card" id="dashboardWorkspace">
+            <div class="dashboard-header">
+                <div>
+                    <h2 class="dashboard-title">Daftar Seluruh Status Booking Pelanggan</h2>
+                    <p style="font-size: 0.85rem; color: var(--muted);">Pantau dan validasi kelanjutan status transaksi pemesanan tiket.</p>
+                </div>
+                
+                <!-- Filter Status Booking Berdasarkan Preferensi (AC 3) -->
+                <div class="filter-group">
+                    <label class="field-label" for="statusFilter">Filter Status:</label>
+                    <select id="statusFilter" onchange="renderBookingTable()">
+                        <option value="ALL">Semua Status</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="booked">Booked</option>
+                        <option value="waiting for the payment">Waiting for the payment</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kode Booking</th>
+                            <th>Nama Pelanggan</th>
+                            <th>Rute Penerbangan</th>
+                            <th>Tanggal Pesan</th>
+                            <th>Total Pembayaran</th>
+                            <th>Status Booking</th>
+                            <th>Aksi Validasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingTableBody">
+                        <!-- Data dirender dinamis via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="emptyStateContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let isManagerAuthorized = true;
+
+        // Mock database pemesanan tiket pelanggan (AC 2)
+        const bookingDatabase = [
+            { id: 1, code: 'SKY-9912X', customer: 'Budi Santoso', route: 'CGK ➔ DPS', date: '2026-03-10', total: 'Rp 1.350.000', status: 'confirmed' },
+            { id: 2, code: 'SKY-8841Y', customer: 'Siti Aminah', route: 'SUB ➔ KNO', date: '2026-03-11', total: 'Rp 1.450.000', status: 'booked' },
+            { id: 3, code: 'SKY-7732Z', customer: 'Rahmat Hidayat', route: 'CGK ➔ YIA', date: '2026-03-12', total: 'Rp 950.000', status: 'waiting for the payment' },
+            { id: 4, code: 'SKY-5521A', customer: 'Dewi Lestari', route: 'DPS ➔ CGK', date: '2026-03-13', total: 'Rp 1.320.000', status: 'confirmed' },
+            { id: 5, code: 'SKY-3319B', customer: 'Ahmad Fauzi', route: 'SUB ➔ DPS', date: '2026-03-14', total: 'Rp 510.000', status: 'waiting for the payment' }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderBookingTable();
+        });
+
+        function toggleAuthStatus() {
+            isManagerAuthorized = !isManagerAuthorized;
+            const statusText = document.getElementById('statusText');
+            const toggleBtn = document.getElementById('toggleAuthBtn');
+            const authCard = document.getElementById('authCard');
+            const restrictedBox = document.getElementById('restrictedBox');
+            const workspace = document.getElementById('dashboardWorkspace');
+
+            if (isManagerAuthorized) {
+                statusText.textContent = "Manajer Travel Terverifikasi (Sah)";
+                toggleBtn.textContent = "Simulasikan Bukan Manajer";
+                authCard.style.background = "var(--auth-bg)";
+                authCard.style.borderColor = "var(--auth-border)";
+                restrictedBox.style.display = "none";
+                workspace.style.display = "block";
+            } else {
+                statusText.textContent = "Pengguna Biasa / Tidak Sah";
+                toggleBtn.textContent = "Aktifkan Otorisasi Manajer";
+                authCard.style.background = "#fef2f2";
+                authCard.style.borderColor = "#fca5a5";
+                restrictedBox.style.display = "block";
+                workspace.style.display = "none";
+            }
+        }
+
+        function renderBookingTable() {
+            const filterValue = document.getElementById('statusFilter').value;
+            const tbody = document.getElementById('bookingTableBody');
+            const emptyContainer = document.getElementById('emptyStateContainer');
+            tbody.innerHTML = '';
+            emptyContainer.innerHTML = '';
+
+            let filteredData = bookingDatabase;
+            if (filterValue !== 'ALL') {
+                filteredData = bookingDatabase.filter(item => item.status === filterValue);
+            }
+
+            // AC 4: Jika tidak ditemukan data booking sesuai filter
+            if (filteredData.length === 0) {
+                emptyContainer.innerHTML = `
+                    <div class="empty-state">
+                        "Tidak ada data booking dengan status tersebut"[cite: 28, 30]
+                    </div>
+                `;
+                return;
+            }
+
+            // AC 2 & 3: Menampilkan daftar booking / hasil filter
+            filteredData.forEach(item => {
+                let badgeClass = 'badge-confirmed';
+                if (item.status === 'booked') badgeClass = 'badge-booked';
+                if (item.status === 'waiting for the payment') badgeClass = 'badge-waiting';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.code}</strong></td>
+                    <td>${item.customer}</td>
+                    <td>${item.route}</td>
+                    <td>${item.date}</td>
+                    <td>${item.total}</td>
+                    <td><span class="badge ${badgeClass}">${item.status}</span></td>
+                    <td><button type="button" class="btn-validate" onclick="validateBooking('${item.code}')">Pastikan Valid</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // AC 5: Memeriksa dan memastikan kelanjutan pemesanan
+        function validateBooking(code) {
+            alert(`✓ Pemastian Pemesanan Berhasil!\n\nStatus booking dengan kode reference [${code}] telah diverifikasi sah dan kelanjutan pembayarannya dipastikan valid oleh Manajer Travel.`);
+        }
+    </script>
+</body>
+</html>

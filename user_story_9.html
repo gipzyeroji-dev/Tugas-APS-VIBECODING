@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCompare - Verifikasi Booking Reference Manajer Travel</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #0f172a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --danger: #e11d48;
+            --danger-bg: #fff1f2;
+            --auth-bg: #eef2ff;
+            --auth-border: #c7d2fe;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #312e81 0%, #0f172a 100%);
+            color: white;
+            padding: 40px 24px 70px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .hero p {
+            color: #c7d2fe;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: -45px auto 0;
+            padding: 0 20px;
+        }
+
+        .auth-card {
+            background: var(--auth-bg);
+            border: 1.5px solid var(--auth-border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+        }
+
+        .auth-info {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3730a3;
+        }
+
+        .btn-toggle-auth {
+            background: #ffffff;
+            border: 1px solid var(--auth-border);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-auth:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 6px;
+        }
+
+        .card-sub {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+        }
+
+        input[type="text"] {
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f8fafc;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Hasil Verifikasi & Pesan Error (AC 3, 4) */
+        .result-box {
+            background: var(--success-bg);
+            border: 1.5px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-box {
+            background: var(--danger-bg);
+            border: 1.5px solid #fecdd3;
+            color: var(--danger);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .restricted-overlay {
+            background: var(--danger-bg);
+            border: 1.5px solid #fca5a5;
+            color: var(--danger);
+            padding: 28px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #d1fae5;
+            font-size: 0.9rem;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>Verifikasi Status Booking</h1>
+        <p>Validasi Keabsahan Tiket Pelanggan Menggunakan Kode Booking Reference</p>
+    </div>
+
+    <div class="container">
+        <!-- Verifikasi Hak Akses Manajer Travel (AC 1) -->
+        <div class="auth-card" id="authCard">
+            <div class="auth-info">
+                <span>🛡️ Status Akses: <strong id="statusText">Manajer Travel Sah (Terverifikasi)</strong></span>
+            </div>
+            <button type="button" class="btn-toggle-auth" id="toggleAuthBtn" onclick="toggleAuthStatus()">Simulasikan Bukan Manajer</button>
+        </div>
+
+        <!-- Peringatan Akses Ditolak (AC 1) -->
+        <div class="restricted-overlay" id="restrictedBox">
+            ⛔ Akses Ditolak: "Hanya pengguna dengan hak akses Manajer Travel yang sah yang dapat mengakses menu verifikasi status booking."[cite: 37, 39]
+        </div>
+
+        <!-- Form Verifikasi Booking (Task a & AC 2) -->
+        <div class="card" id="verificationWorkspace">
+            <h2 class="card-title">Kolom Verifikasi Reference</h2>
+            <p class="card-sub">Masukkan kode booking reference pelanggan (Contoh valid: <strong>SKY-9912X</strong> atau <strong>SKY-8841Y</strong>).</p>
+
+            <form id="verifyForm">
+                <div class="field-group">
+                    <label class="field-label" for="bookingReferenceCode">Kode Booking Reference</label>
+                    <input type="text" id="bookingReferenceCode" placeholder="Masukkan kode (cth: SKY-9912X)" required autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn-primary">Verifikasi Status Booking</button>
+            </form>
+
+            <!-- AC 3: Hasil Berhasil -->
+            <div class="result-box" id="resultBox">
+                <div style="font-weight: 700; font-size: 1.05rem; color: var(--success); margin-bottom: 12px;">
+                    ✅ Status Booking: Valid & Sah
+                </div>
+                <div class="detail-row">
+                    <span style="color: var(--muted);">Kode Reference:</span>
+                    <strong id="resCode"></strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: var(--muted);">Nama Pelanggan:</span>
+                    <strong id="resCustomer"></strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: var(--muted);">Rute Penerbangan:</span>
+                    <strong id="resRoute"></strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: var(--muted);">Tanggal Pemesanan:</span>
+                    <strong id="resDate"></strong>
+                </div>
+                <div class="detail-row">
+                    <span style="color: var(--muted);">Status Transaksi:</span>
+                    <strong id="resStatus" style="color: var(--success);"></strong>
+                </div>
+            </div>
+
+            <!-- AC 4: Pesan Error & Opsi Pengulangan Input -->
+            <div class="error-box" id="errorBox">
+                ❌ <span id="errorText"></span>
+                <div style="margin-top: 10px; font-size: 0.85rem; font-weight: normal; color: #881337;">
+                    Silakan periksa kembali kode Anda dan lakukan input ulang pada kolom di atas.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isManagerAuthorized = true;
+
+        // Database Simulasi Pemesanan Tiket Pelanggan
+        const bookingReferenceDB = {
+            'SKY-9912X': { customer: 'Budi Santoso', route: 'Jakarta (CGK) ➔ Bali (DPS)', date: '2026-03-10', status: 'CONFIRMED (Lunas)' },
+            'SKY-8841Y': { customer: 'Siti Aminah', route: 'Surabaya (SUB) ➔ Medan (KNO)', date: '2026-03-11', status: 'BOOKED (Menunggu Proses)' },
+            'SKY-7732Z': { customer: 'Rahmat Hidayat', route: 'Jakarta (CGK) ➔ Yogyakarta (YIA)', date: '2026-03-12', status: 'WAITING FOR PAYMENT' }
+        };
+
+        function toggleAuthStatus() {
+            isManagerAuthorized = !isManagerAuthorized;
+            const statusText = document.getElementById('statusText');
+            const toggleBtn = document.getElementById('toggleAuthBtn');
+            const authCard = document.getElementById('authCard');
+            const restrictedBox = document.getElementById('restrictedBox');
+            const workspace = document.getElementById('verificationWorkspace');
+
+            if (isManagerAuthorized) {
+                statusText.textContent = "Manajer Travel Sah (Terverifikasi)";
+                toggleBtn.textContent = "Simulasikan Bukan Manajer";
+                authCard.style.background = "var(--auth-bg)";
+                authCard.style.borderColor = "var(--auth-border)";
+                restrictedBox.style.display = "none";
+                workspace.style.display = "block";
+            } else {
+                statusText.textContent = "Pengguna Biasa / Tidak Sah";
+                toggleBtn.textContent = "Aktifkan Otorisasi Manajer";
+                authCard.style.background = "#fef2f2";
+                authCard.style.borderColor = "#fca5a5";
+                restrictedBox.style.display = "block";
+                workspace.style.display = "none";
+            }
+        }
+
+        // Task a, b, c & AC 2, 3, 4: Proses Verifikasi Kode Reference
+        document.getElementById('verifyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!isManagerAuthorized) return;
+
+            const inputCode = document.getElementById('bookingReferenceCode').value.trim().toUpperCase();
+            const resultBox = document.getElementById('resultBox');
+            const errorBox = document.getElementById('errorBox');
+
+            resultBox.style.display = "none";
+            errorBox.style.display = "none";
+
+            const data = bookingReferenceDB[inputCode];
+
+            if (!data) {
+                // AC 4: Pesan kesalahan persis sesuai spesifikasi PDF
+                document.getElementById('errorText').textContent = "Kode booking reference tidak sesuai";
+                errorBox.style.display = "block";
+                return;
+            }
+
+            // AC 3: Jika kode sesuai, tampilkan rincian data & status booking
+            document.getElementById('resCode').textContent = inputCode;
+            document.getElementById('resCustomer').textContent = data.customer;
+            document.getElementById('resRoute').textContent = data.route;
+            document.getElementById('resDate').textContent = data.date;
+            document.getElementById('resStatus').textContent = data.status;
+            resultBox.style.display = "block";
+        });
+    </script>
+</body>
+</html>

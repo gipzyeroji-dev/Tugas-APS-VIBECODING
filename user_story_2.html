@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Pemesanan Tiket Pesawat - User Story 2</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --cancel: #475569;
+      --cancel-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.925rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .alert {
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.925rem;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      text-align: center;
+      padding: 28px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .status-BERHASIL { background: var(--success-bg); color: var(--success); }
+    .status-DIBATALKAN { background: var(--cancel-bg); color: var(--cancel); }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border-radius: 12px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Sistem Pemesanan Tiket Pesawat</h1>
+        <p>User Story 2 — Pencarian Jadwal, Pemesanan, &amp; Pembatalan Tiket</p>
+      </div>
+      <div>
+        <span style="font-size: 0.875rem; margin-right: 12px;">Pengguna: Budi Santoso</span>
+        <button class="btn-danger" onclick="alert('Sesi aktif')">Keluar</button>
+      </div>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="tabPencarian" onclick="uiNav.pindahTab('pencarian')">1. Cari &amp; Pesan Penerbangan</button>
+      <button class="tab-btn" id="tabRiwayat" onclick="uiNav.pindahTab('riwayat')">2. Riwayat &amp; Pembatalan Pesanan</button>
+    </div>
+
+    <!-- TAB 1: PENCARIAN & PEMESANAN -->
+    <section id="panelPencarian" class="card">
+      <div class="card-title">Pencarian Jadwal Penerbangan</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="bandaraAsal">Bandara Asal</label>
+          <select id="bandaraAsal">
+            <option value="SUB">Surabaya (SUB)</option>
+            <option value="CGK">Jakarta (CGK)</option>
+            <option value="DPS">Bali (DPS)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="bandaraTujuan">Bandara Tujuan</label>
+          <select id="bandaraTujuan">
+            <option value="CGK">Jakarta (CGK)</option>
+            <option value="SUB">Surabaya (SUB)</option>
+            <option value="DPS">Bali (DPS)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tanggalCari">Tanggal Keberangkatan</label>
+          <input type="date" id="tanggalCari" value="2026-11-20" />
+        </div>
+        <div class="form-group">
+          <button class="btn-primary" onclick="uiPencarian.cari()">Cari Jadwal</button>
+        </div>
+      </div>
+
+      <div id="hasilPencarianContainer"></div>
+    </section>
+
+    <!-- TAB 2: RIWAYAT & PEMBATALAN -->
+    <section id="panelRiwayat" class="card hidden">
+      <div class="card-title">Daftar Pesanan Tiket Aktif &amp; Riwayat</div>
+      <div id="riwayatContainer"></div>
+    </section>
+  </div>
+
+  <!-- MODAL PEMESANAN TIKET -->
+  <div id="modalPemesanan" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="card-title">Form Pemesanan Tiket Pesawat</div>
+      <p id="infoPenerbanganModal" style="font-size: 0.85rem; color: var(--muted); margin-bottom: 16px;"></p>
+      
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label for="namaPenumpang">Nama Lengkap Penumpang</label>
+        <input type="text" id="namaPenumpang" value="Budi Santoso" />
+      </div>
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label for="jumlahTiket">Jumlah Tiket</label>
+        <input type="number" id="jumlahTiket" value="1" min="1" max="5" />
+      </div>
+
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn-secondary" onclick="uiModalPemesanan.tutup()">Batal</button>
+        <button class="btn-primary" onclick="uiModalPemesanan.konfirmasi()">Konfirmasi Pesanan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. ENTITY (MODEL DATA & DATABASE SISTEM) — Sesuai Domain Model Slide 6
+    // =========================================================================
+    const StatusPemesanan = Object.freeze({
+      BERHASIL: "BERHASIL",
+      DIBATALKAN: "DIBATALKAN"
+    });
+
+    const DatabaseSistem = {
+      pengguna: [
+        { idPengguna: "U01", namaLengkap: "Budi Santoso", email: "budi@mail.com", noTelepon: "08123456789" }
+      ],
+      maskapai: [
+        { idMaskapai: "M01", kodeMaskapai: "GA", namaMaskapai: "Garuda Indonesia" },
+        { idMaskapai: "M02", kodeMaskapai: "QZ", namaMaskapai: "AirAsia" },
+        { idMaskapai: "M03", kodeMaskapai: "JT", namaMaskapai: "Lion Air" }
+      ],
+      penerbangan: [
+        { idPenerbangan: "P001", idMaskapai: "M01", nomorPenerbangan: "GA-102", bandaraAsal: "SUB", bandaraTujuan: "CGK", tanggalKeberangkatan: "2026-11-20", waktuBerangkat: "08:00", waktuTiba: "09:30", kelasPenerbangan: "Ekonomi", hargaTiket: 1250000, kuotaKursi: 45 },
+        { idPenerbangan: "P002", idMaskapai: "M02", nomorPenerbangan: "QZ-405", bandaraAsal: "SUB", bandaraTujuan: "CGK", tanggalKeberangkatan: "2026-11-20", waktuBerangkat: "13:15", waktuTiba: "14:45", kelasPenerbangan: "Ekonomi", hargaTiket: 850000, kuotaKursi: 20 },
+        { idPenerbangan: "P003", idMaskapai: "M03", nomorPenerbangan: "JT-310", bandaraAsal: "SUB", bandaraTujuan: "DPS", tanggalKeberangkatan: "2026-11-20", waktuBerangkat: "10:00", waktuTiba: "10:55", kelasPenerbangan: "Ekonomi", hargaTiket: 450000, kuotaKursi: 15 }
+      ],
+      pemesanan: [
+        { idPemesanan: "BK-9981", idPengguna: "U01", idPenerbangan: "P001", kodeBooking: "GA102SUB", tanggalPemesanan: "2026-11-15", namaPenumpang: "Budi Santoso", jumlahTiket: 1, totalHarga: 1250000, statusPemesanan: StatusPemesanan.BERHASIL }
+      ],
+
+      queryPenerbangan(asal, tujuan, tanggal) {
+        return this.penerbangan
+          .filter(p => p.bandaraAsal === asal && p.bandaraTujuan === tujuan && p.tanggalKeberangkatan === tanggal)
+          .map(p => {
+            const m = this.maskapai.find(mask => mask.idMaskapai === p.idMaskapai);
+            const [jamB, minB] = p.waktuBerangkat.split(':').map(Number);
+            const [jamT, minT] = p.waktuTiba.split(':').map(Number);
+            let durasiMin = (jamT * 60 + minT) - (jamB * 60 + minB);
+            if (durasiMin < 0) durasiMin += 24 * 60;
+            const durasiJam = Math.floor(durasiMin / 60);
+            const sisaMin = durasiMin % 60;
+            return {
+              ...p,
+              namaMaskapai: m ? m.namaMaskapai : "Maskapai",
+              durasi: `${durasiJam}j ${sisaMin}m`
+            };
+          });
+      },
+
+      simpanPesanan(dataBaru) {
+        this.pemesanan.push(dataBaru);
+        return true;
+      },
+
+      updateStatusPemesanan(idPemesanan, statusBaru) {
+        const item = this.pemesanan.find(b => b.idPemesanan === idPemesanan);
+        if (item) {
+          item.statusPemesanan = statusBaru;
+          return true;
+        }
+        return false;
+      },
+
+      getPemesananByUser(idPengguna) {
+        return this.pemesanan.filter(b => b.idPengguna === idPengguna).map(b => {
+          const p = this.penerbangan.find(flight => flight.idPenerbangan === b.idPenerbangan);
+          const m = p ? this.maskapai.find(mask => mask.idMaskapai === p.idMaskapai) : null;
+          return {
+            ...b,
+            nomorPenerbangan: p ? p.nomorPenerbangan : "-",
+            rute: p ? `${p.bandaraAsal} → ${p.bandaraTujuan}` : "-",
+            namaMaskapai: m ? m.namaMaskapai : "-"
+          };
+        });
+      }
+    };
+
+    // =========================================================================
+    // 2. CONTROL (LOGIKA BISNIS) — Sesuai Robustness & Sequence Diagram Slide 7-8
+    // =========================================================================
+    const PenerbanganController = {
+      cariJadwal(asal, tujuan, tanggal) {
+        if (!asal || !tujuan || !tanggal) {
+          return { valid: false, pesan: "Harap lengkapi parameter pencarian (asal, tujuan, tanggal)." };
+        }
+        const list = DatabaseSistem.queryPenerbangan(asal, tujuan, tanggal);
+        if (list.length === 0) {
+          // Acceptance Criteria #6
+          return { valid: true, kosong: true, pesan: "Jadwal penerbangan tidak ditemukan" };
+        }
+        return { valid: true, kosong: false, data: list };
+      }
+    };
+
+    const PemesananController = {
+      selectedFlight: null,
+
+      prosesPesanan(idPenerbangan, namaPenumpang, jumlahTiket) {
+        const flight = DatabaseSistem.penerbangan.find(p => p.idPenerbangan === idPenerbangan);
+        if (!flight) return { sukses: false, pesan: "Jadwal penerbangan tidak valid." };
+
+        const totalHarga = flight.hargaTiket * jumlahTiket;
+        const kodeBooking = `BK${Math.floor(100000 + Math.random() * 900000)}`;
+        const idPemesanan = `ORD-${Date.now().toString().slice(-5)}`;
+
+        const dataPesanan = {
+          idPemesanan,
+          idPengguna: "U01",
+          idPenerbangan,
+          kodeBooking,
+          tanggalPemesanan: new Date().toISOString().split('T')[0],
+          namaPenumpang,
+          jumlahTiket,
+          totalHarga,
+          statusPemesanan: StatusPemesanan.BERHASIL
+        };
+
+        DatabaseSistem.simpanPesanan(dataPesanan);
+        return { sukses: true, pesan: `Pemesanan Berhasil! Kode Booking: ${kodeBooking}` };
+      },
+
+      batalkanPesanan(idPemesanan) {
+        const sukses = DatabaseSistem.updateStatusPemesanan(idPemesanan, StatusPemesanan.DIBATALKAN);
+        if (sukses) {
+          return { sukses: true, pesan: "Pesanan berhasil dibatalkan." };
+        }
+        return { sukses: false, pesan: "Gagal membatalkan pesanan." };
+      }
+    };
+
+    // =========================================================================
+    // 3. BOUNDARY (ANTAR MUKA / UI) — Sesuai Robustness Diagram Slide 7
+    // =========================================================================
+    const uiNav = {
+      pindahTab(tab) {
+        document.getElementById("tabPencarian").classList.remove("active");
+        document.getElementById("tabRiwayat").classList.remove("active");
+        document.getElementById("panelPencarian").classList.add("hidden");
+        document.getElementById("panelRiwayat").classList.add("hidden");
+
+        if (tab === 'pencarian') {
+          document.getElementById("tabPencarian").classList.add("active");
+          document.getElementById("panelPencarian").classList.remove("hidden");
+        } else {
+          document.getElementById("tabRiwayat").classList.add("active");
+          document.getElementById("panelRiwayat").classList.remove("hidden");
+          uiRiwayat.tampilkan();
+        }
+      }
+    };
+
+    const uiPencarian = {
+      cari() {
+        const asal = document.getElementById("bandaraAsal").value;
+        const tujuan = document.getElementById("bandaraTujuan").value;
+        const tanggal = document.getElementById("tanggalCari").value;
+        const container = document.getElementById("hasilPencarianContainer");
+
+        const hasil = PenerbanganController.cariJadwal(asal, tujuan, tanggal);
+
+        if (!hasil.valid) {
+          container.innerHTML = `<div class="alert alert-danger">${hasil.pesan}</div>`;
+          return;
+        }
+
+        if (hasil.kosong) {
+          container.innerHTML = `<div class="alert alert-info">${hasil.pesan}</div>`;
+          return;
+        }
+
+        const rows = hasil.data.map(item => `
+          <tr>
+            <td>
+              <strong>${item.namaMaskapai}</strong><br>
+              <span style="font-size:0.75rem; color:var(--muted);">${item.nomorPenerbangan}</span>
+            </td>
+            <td>${item.waktuBerangkat} - ${item.waktuTiba}</td>
+            <td>${item.durasi}</td>
+            <td>${item.kelasPenerbangan}</td>
+            <td style="font-weight:700; color:var(--primary);">Rp ${item.hargaTiket.toLocaleString('id-ID')}</td>
+            <td>
+              <button class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="uiModalPemesanan.buka('${item.idPenerbangan}')">Pesan</button>
+            </td>
+          </tr>
+        `).join('');
+
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Maskapai</th>
+                <th>Waktu (Berangkat - Tiba)</th>
+                <th>Durasi</th>
+                <th>Kelas</th>
+                <th>Harga Tiket</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+    };
+
+    const uiModalPemesanan = {
+      flightIdAktif: null,
+
+      buka(idPenerbangan) {
+        this.flightIdAktif = idPenerbangan;
+        const flight = DatabaseSistem.penerbangan.find(p => p.idPenerbangan === idPenerbangan);
+        const m = DatabaseSistem.maskapai.find(mask => mask.idMaskapai === flight.idMaskapai);
+
+        document.getElementById("infoPenerbanganModal").textContent = 
+          `Penerbangan: ${m.namaMaskapai} (${flight.nomorPenerbangan}) • ${flight.bandaraAsal} → ${flight.bandaraTujuan} • Rp ${flight.hargaTiket.toLocaleString('id-ID')}`;
+        
+        document.getElementById("modalPemesanan").classList.remove("hidden");
+      },
+
+      tutup() {
+        document.getElementById("modalPemesanan").classList.add("hidden");
+      },
+
+      konfirmasi() {
+        const nama = document.getElementById("namaPenumpang").value;
+        const jumlah = parseInt(document.getElementById("jumlahTiket").value, 10);
+
+        if (!nama) {
+          alert("Nama penumpang wajib diisi.");
+          return;
+        }
+
+        const res = PemesananController.prosesPesanan(this.flightIdAktif, nama, jumlah);
+        alert(res.pesan);
+        this.tutup();
+        uiNav.pindahTab('riwayat');
+      }
+    };
+
+    const uiRiwayat = {
+      tampilkan() {
+        const container = document.getElementById("riwayatContainer");
+        const listPesanan = DatabaseSistem.getPemesananByUser("U01");
+
+        if (listPesanan.length === 0) {
+          container.innerHTML = `<div class="alert alert-info">Belum ada riwayat pesanan tiket aktif.</div>`;
+          return;
+        }
+
+        const rows = listPesanan.map(item => `
+          <tr>
+            <td>
+              <strong>${item.kodeBooking}</strong><br>
+              <span style="font-size:0.75rem; color:var(--muted);">${item.tanggalPemesanan}</span>
+            </td>
+            <td>${item.namaMaskapai} (${item.nomorPenerbangan})</td>
+            <td>${item.rute}</td>
+            <td>${item.namaPenumpang} (${item.jumlahTiket} tiket)</td>
+            <td style="font-weight:700;">Rp ${item.totalHarga.toLocaleString('id-ID')}</td>
+            <td><span class="badge status-${item.statusPemesanan}">${item.statusPemesanan}</span></td>
+            <td>
+              ${item.statusPemesanan === 'BERHASIL' ? `<button class="btn-danger" style="padding: 4px 10px; font-size: 0.75rem;" onclick="uiRiwayat.batalkan('${item.idPemesanan}')">Batalkan</button>` : '-'}
+            </td>
+          </tr>
+        `).join('');
+
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Kode Booking</th>
+                <th>Maskapai</th>
+                <th>Rute</th>
+                <th>Penumpang</th>
+                <th>Total Harga</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      },
+
+      batalkan(idPemesanan) {
+        if (confirm("Apakah Anda yakin ingin membatalkan pesanan tiket ini?")) {
+          const res = PemesananController.batalkanPesanan(idPemesanan);
+          alert(res.pesan);
+          this.tampilkan();
+        }
+      }
+    };
+  </script>
+</body>
+</html>

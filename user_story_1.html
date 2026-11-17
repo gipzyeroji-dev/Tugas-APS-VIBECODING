@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Manajemen Cuti - User Story 1 (HRD Manajer)</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --cancel: #475569;
+      --cancel-bg: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.925rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .alert {
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.925rem;
+      font-weight: 500;
+      margin-top: 16px;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      text-align: center;
+      padding: 28px;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .preset-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .preset-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tr:hover td {
+      background: #f8fafc;
+    }
+
+    .pegawai-link {
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .pegawai-link:hover {
+      color: var(--primary-hover);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .status-DIAJUKAN { background: var(--warning-bg); color: var(--warning); }
+    .status-DISETUJUI { background: var(--success-bg); color: var(--success); }
+    .status-DITOLAK { background: var(--danger-bg); color: var(--danger); }
+    .status-DIBATALKAN { background: var(--cancel-bg); color: var(--cancel); }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border-radius: 12px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kuota-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .kuota-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .kuota-item span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .kuota-item strong {
+      font-size: 1.35rem;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Sistem Manajemen Cuti Pegawai</h1>
+        <p>User Story 1 — Monitoring Rentang Cuti, Riwayat &amp; Sisa Kuota Pegawai</p>
+      </div>
+      <div id="sessionInfo" class="hidden">
+        <span id="loggedUserLabel" style="font-size: 0.875rem; margin-right: 12px;"></span>
+        <button class="btn-danger" onclick="uiLogin.logout()">Keluar</button>
+      </div>
+    </header>
+
+    <section id="boundaryLogin" class="card">
+      <div class="card-title">Form Login / Validasi Hak Akses</div>
+      <p style="font-size: 0.875rem; color: var(--muted); margin-bottom: 16px;">
+        Pilih akun simulasi sesuai <strong>Domain Model (Peran Pengguna: HRD Manajer / Pegawai)</strong> untuk menguji Acceptance Criteria #5.
+      </p>
+      <div class="login-grid">
+        <div class="form-group">
+          <label for="akunSelect">Pilih Akun Pengguna</label>
+          <select id="akunSelect">
+            <option value="U01">Bu Sari (Peran: HRD Manajer)</option>
+            <option value="U02">Andi Pratama (Peran: Pegawai)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button class="btn-primary" onclick="uiLogin.handleLogin()">Masuk ke Halaman Monitoring Cuti</button>
+        </div>
+      </div>
+      <div id="loginErrorBox" class="alert alert-danger hidden"></div>
+    </section>
+
+    <section id="boundaryMonitoring" class="card hidden">
+      <div class="card-title">
+        <span>Halaman Monitoring Cuti Pegawai</span>
+        <span style="font-size: 0.8rem; font-weight: 500; color: var(--muted);">Klik nama pegawai untuk melihat detail riwayat &amp; sisa cuti</span>
+      </div>
+
+      <div class="preset-buttons">
+        <button class="preset-btn" onclick="uiMonitoring.setPreset('2026-11-01', '2026-11-30')">Preset: Nov 2026 (Ada Data)</button>
+        <button class="preset-btn" onclick="uiMonitoring.setPreset('2026-12-01', '2026-12-31')">Preset: Des 2026 (Ada Data)</button>
+        <button class="preset-btn" onclick="uiMonitoring.setPreset('2027-01-01', '2027-01-31')">Preset: Jan 2027 (Kosong)</button>
+      </div>
+
+      <div class="filter-bar">
+        <div class="form-group">
+          <label for="tglMulai">Tanggal Mulai</label>
+          <input type="date" id="tglMulai" value="2026-11-01" />
+        </div>
+        <div class="form-group">
+          <label for="tglSelesai">Tanggal Selesai</label>
+          <input type="date" id="tglSelesai" value="2026-11-30" />
+        </div>
+        <div class="form-group">
+          <button class="btn-primary" onclick="uiMonitoring.tampilkanPengajuan()">Tampilkan Daftar Cuti</button>
+        </div>
+      </div>
+
+      <div id="hasilContainer"></div>
+    </section>
+  </div>
+
+  <div id="modalDetail" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalNamaPegawai" style="font-size: 1.1rem;">Detail Pegawai</h3>
+          <p id="modalInfoPegawai" style="font-size: 0.825rem; color: var(--muted);"></p>
+        </div>
+        <button class="btn-secondary" onclick="uiModalDetail.tutup()">Tutup</button>
+      </div>
+
+      <div style="font-size: 0.875rem; font-weight: 600;">
+        Informasi Kuota Cuti Tahun <span id="modalTahun"></span>
+      </div>
+      <div class="kuota-grid">
+        <div class="kuota-item">
+          <span>Total Jatah</span>
+          <strong id="modalTotalJatah">0</strong>
+        </div>
+        <div class="kuota-item">
+          <span>Cuti Terpakai</span>
+          <strong id="modalCutiTerpakai">0</strong>
+        </div>
+        <div class="kuota-item">
+          <span>Sisa Cuti</span>
+          <strong id="modalSisaCuti">0</strong>
+        </div>
+      </div>
+
+      <div style="font-size: 0.875rem; font-weight: 600; margin-top: 16px; margin-bottom: 8px;">
+        Riwayat Pengajuan Cuti (Status: Disetujui &amp; Ditolak)
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal Cuti</th>
+            <th>Lama (Hari Kerja)</th>
+            <th>Alasan</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="modalRiwayatBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const PeranPengguna = Object.freeze({
+      HRD_MANAJER: "HRD_MANAJER",
+      PEGAWAI: "PEGAWAI"
+    });
+
+    const StatusCuti = Object.freeze({
+      DIAJUKAN: "DIAJUKAN",
+      DISETUJUI: "DISETUJUI",
+      DITOLAK: "DITOLAK",
+      DIBATALKAN: "DIBATALKAN"
+    });
+
+    const DatabaseSistem = {
+      pengguna: [
+        { idPengguna: "U01", username: "bu_sari", namaTampilan: "Bu Sari", password: "123", peran: PeranPengguna.HRD_MANAJER, idPegawai: "P01" },
+        { idPengguna: "U02", username: "andi_dev", namaTampilan: "Andi Pratama", password: "123", peran: PeranPengguna.PEGAWAI, idPegawai: "P02" }
+      ],
+      pegawai: [
+        { idPegawai: "P01", nip: "1988041201", namaLengkap: "Sari Wijaya, S.Psi.", jabatan: "HRD Manajer", departemen: "Human Resources" },
+        { idPegawai: "P02", nip: "1995081702", namaLengkap: "Andi Pratama", jabatan: "Backend Engineer", departemen: "Engineering" },
+        { idPegawai: "P03", nip: "1997021003", namaLengkap: "Nadia Putri", jabatan: "UI/UX Designer", departemen: "Product" },
+        { idPegawai: "P04", nip: "1993112504", namaLengkap: "Budi Santoso", jabatan: "QA Engineer", departemen: "Engineering" }
+      ],
+      kuotaCuti: [
+        { idKuota: "K01", idPegawai: "P01", tahun: 2026, totalJatah: 12, cutiTerpakai: 2, sisaCuti: 10 },
+        { idKuota: "K02", idPegawai: "P02", tahun: 2026, totalJatah: 12, cutiTerpakai: 5, sisaCuti: 7 },
+        { idKuota: "K03", idPegawai: "P03", tahun: 2026, totalJatah: 12, cutiTerpakai: 3, sisaCuti: 9 },
+        { idKuota: "K04", idPegawai: "P04", tahun: 2026, totalJatah: 12, cutiTerpakai: 4, sisaCuti: 8 }
+      ],
+      pengajuanCuti: [
+        {
+          idPengajuan: "C001",
+          idPegawai: "P02",
+          tanggalMulai: "2026-11-02",
+          tanggalSelesai: "2026-11-04",
+          lamaCuti: 3,
+          alasan: "Acara keluarga di luar kota",
+          status: StatusCuti.DISETUJUI
+        },
+        {
+          idPengajuan: "C002",
+          idPegawai: "P03",
+          tanggalMulai: "2026-11-10",
+          tanggalSelesai: "2026-11-12",
+          lamaCuti: 3,
+          alasan: "Cuti tahunan",
+          status: StatusCuti.DIAJUKAN
+        },
+        {
+          idPengajuan: "C003",
+          idPegawai: "P04",
+          tanggalMulai: "2026-10-30",
+          tanggalSelesai: "2026-11-03",
+          lamaCuti: 3,
+          alasan: "Keperluan pribadi",
+          status: StatusCuti.DITOLAK
+        },
+        {
+          idPengajuan: "C004",
+          idPegawai: "P02",
+          tanggalMulai: "2026-08-17",
+          tanggalSelesai: "2026-08-18",
+          lamaCuti: 2,
+          alasan: "Liburan",
+          status: StatusCuti.DISETUJUI
+        },
+        {
+          idPengajuan: "C005",
+          idPegawai: "P03",
+          tanggalMulai: "2026-11-20",
+          tanggalSelesai: "2026-11-20",
+          lamaCuti: 1,
+          alasan: "Batal berangkat",
+          status: StatusCuti.DIBATALKAN
+        },
+        {
+          idPengajuan: "C006",
+          idPegawai: "P04",
+          tanggalMulai: "2026-12-21",
+          tanggalSelesai: "2026-12-24",
+          lamaCuti: 4,
+          alasan: "Cuti akhir tahun",
+          status: StatusCuti.DISETUJUI
+        }
+      ],
+
+      queryPeran(idPengguna) {
+        const user = this.pengguna.find((u) => u.idPengguna === idPengguna);
+        return user ? user.peran : null;
+      },
+
+      queryPengajuanBeririsan(tglMulai, tglSelesai) {
+        return this.pengajuanCuti
+          .filter((cuti) => cuti.tanggalMulai <= tglSelesai && cuti.tanggalSelesai >= tglMulai)
+          .map((cuti) => {
+            const peg = this.pegawai.find((p) => p.idPegawai === cuti.idPegawai);
+            return {
+              ...cuti,
+              namaLengkap: peg ? peg.namaLengkap : "Tidak Diketahui"
+            };
+          });
+      },
+
+      queryRiwayatCuti(idPegawai) {
+        return this.pengajuanCuti.filter(
+          (c) => c.idPegawai === idPegawai && (c.status === StatusCuti.DISETUJUI || c.status === StatusCuti.DITOLAK)
+        );
+      },
+
+      queryKuotaCuti(idPegawai, tahun) {
+        return (
+          this.kuotaCuti.find((k) => k.idPegawai === idPegawai && k.tahun === tahun) || {
+            tahun,
+            totalJatah: 12,
+            cutiTerpakai: 0,
+            sisaCuti: 12
+          }
+        );
+      }
+    };
+
+    const AutentikasiController = {
+      currentUser: null,
+
+      cekAkses(idPengguna) {
+        const peran = DatabaseSistem.queryPeran(idPengguna);
+        if (peran === PeranPengguna.HRD_MANAJER) {
+          this.currentUser = DatabaseSistem.pengguna.find((u) => u.idPengguna === idPengguna);
+          return { aksesDiberikan: true, user: this.currentUser };
+        }
+        return {
+          aksesDiberikan: false,
+          pesan: "Akses Ditolak: Hanya pengguna dengan peran HRD Manajer yang dapat mengakses halaman ini."
+        };
+      }
+    };
+
+    const CutiController = {
+      getDaftarCutiByRentang(tglMulai, tglSelesai) {
+        if (!tglMulai || !tglSelesai) {
+          return { valid: false, pesan: "Silakan pilih tanggal mulai dan tanggal selesai terlebih dahulu." };
+        }
+        if (tglMulai > tglSelesai) {
+          return { valid: false, pesan: "Tanggal mulai tidak boleh lebih besar dari tanggal selesai." };
+        }
+
+        const listPengajuan = DatabaseSistem.queryPengajuanBeririsan(tglMulai, tglSelesai);
+        if (listPengajuan.length === 0) {
+          return { valid: true, kosong: true, pesan: "Tidak ada pengajuan cuti pada periode ini" };
+        }
+        return { valid: true, kosong: false, data: listPengajuan };
+      },
+
+      getDetailPegawai(idPegawai, tahun) {
+        const pegawai = DatabaseSistem.pegawai.find((p) => p.idPegawai === idPegawai);
+        const listRiwayat = DatabaseSistem.queryRiwayatCuti(idPegawai);
+        const dataKuota = DatabaseSistem.queryKuotaCuti(idPegawai, tahun);
+
+        return {
+          pegawai,
+          listRiwayat,
+          dataKuota
+        };
+      }
+    };
+
+    const uiLogin = {
+      handleLogin() {
+        const idPengguna = document.getElementById("akunSelect").value;
+        const hasilCek = AutentikasiController.cekAkses(idPengguna);
+        const errorBox = document.getElementById("loginErrorBox");
+
+        if (!hasilCek.aksesDiberikan) {
+          errorBox.textContent = hasilCek.pesan;
+          errorBox.classList.remove("hidden");
+          return;
+        }
+
+        errorBox.classList.add("hidden");
+        document.getElementById("boundaryLogin").classList.add("hidden");
+        document.getElementById("boundaryMonitoring").classList.remove("hidden");
+        document.getElementById("sessionInfo").classList.remove("hidden");
+        document.getElementById("loggedUserLabel").textContent = `Login sebagai: ${hasilCek.user.namaTampilan} (${hasilCek.user.peran === 'HRD_MANAJER' ? 'HRD Manajer' : 'Pegawai'})`;
+
+        uiMonitoring.tampilkanPengajuan();
+      },
+
+      logout() {
+        AutentikasiController.currentUser = null;
+        document.getElementById("boundaryMonitoring").classList.add("hidden");
+        document.getElementById("sessionInfo").classList.add("hidden");
+        document.getElementById("boundaryLogin").classList.remove("hidden");
+      }
+    };
+
+    const uiMonitoring = {
+      setPreset(mulai, selesai) {
+        document.getElementById("tglMulai").value = mulai;
+        document.getElementById("tglSelesai").value = selesai;
+        this.tampilkanPengajuan();
+      },
+
+      tampilkanPengajuan() {
+        const tglMulai = document.getElementById("tglMulai").value;
+        const tglSelesai = document.getElementById("tglSelesai").value;
+        const container = document.getElementById("hasilContainer");
+
+        const hasil = CutiController.getDaftarCutiByRentang(tglMulai, tglSelesai);
+
+        if (!hasil.valid) {
+          container.innerHTML = `<div class="alert alert-danger">${hasil.pesan}</div>`;
+          return;
+        }
+
+        if (hasil.kosong) {
+          container.innerHTML = `<div class="alert alert-info">${hasil.pesan}</div>`;
+          return;
+        }
+
+        const rows = hasil.data
+          .map(
+            (item) => `
+            <tr>
+              <td>
+                <span class="pegawai-link" onclick="uiModalDetail.buka('${item.idPegawai}')">
+                  ${item.namaLengkap}
+                </span>
+              </td>
+              <td>${item.tanggalMulai} s/d ${item.tanggalSelesai}</td>
+              <td>${item.lamaCuti} hari kerja</td>
+              <td><span class="badge status-${item.status}">${item.status}</span></td>
+            </tr>
+          `
+          )
+          .join("");
+
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Pegawai</th>
+                <th>Tanggal Mulai - Selesai</th>
+                <th>Lama Cuti</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+    };
+
+    const uiModalDetail = {
+      buka(idPegawai) {
+        const tglMulai = document.getElementById("tglMulai").value;
+        const tahunDipilih = parseInt(tglMulai.split("-")[0], 10);
+
+        const detail = CutiController.getDetailPegawai(idPegawai, tahunDipilih);
+
+        document.getElementById("modalNamaPegawai").textContent = detail.pegawai.namaLengkap;
+        document.getElementById("modalInfoPegawai").textContent =
+          `NIP: ${detail.pegawai.nip} • ${detail.pegawai.jabatan} (${detail.pegawai.departemen})`;
+
+        document.getElementById("modalTahun").textContent = detail.dataKuota.tahun;
+        document.getElementById("modalTotalJatah").textContent = `${detail.dataKuota.totalJatah} Hari`;
+        document.getElementById("modalCutiTerpakai").textContent = `${detail.dataKuota.cutiTerpakai} Hari`;
+        document.getElementById("modalSisaCuti").textContent = `${detail.dataKuota.sisaCuti} Hari`;
+
+        const tbody = document.getElementById("modalRiwayatBody");
+        if (detail.listRiwayat.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted);">Belum ada riwayat cuti berstatus Disetujui atau Ditolak.</td></tr>`;
+        } else {
+          tbody.innerHTML = detail.listRiwayat
+            .map(
+              (r) => `
+              <tr>
+                <td>${r.tanggalMulai} s/d ${r.tanggalSelesai}</td>
+                <td>${r.lamaegiCuti || r.lamaCuti} hari</td>
+                <td>${r.alasan}</td>
+                <td><span class="badge status-${r.status}">${r.status}</span></td>
+              </tr>
+            `
+            )
+            .join("");
+        }
+
+        document.getElementById("modalDetail").classList.remove("hidden");
+      },
+
+      tutup() {
+        document.getElementById("modalDetail").classList.add("hidden");
+      }
+    };
+  </script>
+</body>
+</html>
